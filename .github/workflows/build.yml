@@ -23,7 +23,7 @@ jobs:
       - name: Extract and rename DEB package
         run: |
           unzip -l flapp-linux-lite.zip
-          unzip -j flapp-linux-lite.zip "dist/*.deb" -d .
+          unzip -o -j flapp-linux-lite.zip "dist/*.deb" -d .
           # Rename the extracted DEB file to the generic name expected by Containerfile
           mv FastLink-*.deb fastlink.deb
           # Clean up the zip file to keep build context clean
