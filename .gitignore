@@ -1,1 +1,4 @@
-.bak
+*.bak
+*.rpm
+*.deb
+*.appimage

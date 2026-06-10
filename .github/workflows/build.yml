@@ -1,0 +1,45 @@
+name: Build Container Image
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download FastLink package
+        run: |
+          curl -L -o flapp-linux-lite.zip https://app.pbbapi.baifeng88.com/apps/fl/flapp-linux-lite.zip
+
+      - name: Extract and rename DEB package
+        run: |
+          unzip -j flapp-linux-lite.zip "dist/*.deb" -d .
+          # Rename the extracted DEB file to the generic name expected by Containerfile
+          mv FastLink-*.deb fastlink.deb
+          # Clean up the zip file to keep build context clean
+          rm flapp-linux-lite.zip
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build container image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Containerfile
+          push: false
+          tags: fastlink:latest
+          # Use local cache to speed up subsequent builds
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

@@ -2,7 +2,7 @@ FROM debian:bookworm-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-COPY FastLink-3.0.3-linux-amd64.deb /tmp/airport-client.deb
+COPY fastlink.deb /tmp/airport-client.deb
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     xvfb \
